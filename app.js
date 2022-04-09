@@ -1,10 +1,10 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 const cors = require('cors');
 const {Customers} = require('./models');
 
-
+require('dotenv').config()
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors())
