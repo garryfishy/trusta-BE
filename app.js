@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
 const cors = require('cors');
-const {Customers} = require('./models');
+const {Customers, Interested} = require('./models');
 
 require('dotenv').config()
 app.use(express.urlencoded({ extended: true }));
@@ -40,6 +40,27 @@ app.delete('/testimony/:id', (req,res)=> {
     Customers.destroy({where: {id}})
     .then(data => {
         res.send('Data deleted')
+    })
+    .catch(err => {
+        res.send(err)
+    })
+})
+
+app.get('/email', (req,res) => {
+    Interested.findAll()
+    .then(response => {
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        res.send(err)
+    })
+})
+
+app.post('/email', (req,res) => {
+    const {email, message} = req.body
+    Interested.create({email,message})
+    .then(data => {
+        res.status(200).json(data)
     })
     .catch(err => {
         res.send(err)
