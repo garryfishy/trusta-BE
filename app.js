@@ -28,12 +28,10 @@ async function sendMail(email, message){
     
     let mailOptions = {
         from: '<no-reply@trusta.com>',
-        to: email,
-        subject: 'I want to know more about trusta',
+        to: 'sales@trusta.co.id',
+        subject: `${email} said: ${message}`,
         text: message
     }
-    
-    
     await transporter.sendMail(mailOptions, function(err,data){
         if(err){
             console.log(err)
