@@ -3,6 +3,8 @@ const app = express()
 const port = process.env.PORT || 3000
 const cors = require('cors');
 const {Customers, Interested} = require('./models');
+const nodemailer = require('nodemailer')
+
 
 require('dotenv').config()
 app.use(express.urlencoded({ extended: true }));
@@ -12,6 +14,33 @@ app.use(cors())
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+
+async function sendMail(email, message){
+
+    let transporter = nodemailer.createTransport({
+        service:'gmail',
+        auth: {
+            user:'getintouchtrusta@gmail.com',
+            pass:'Trust@9876'
+        }
+    })
+    
+    let mailOptions = {
+        from: '<no-reply@trusta.com>',
+        to: email,
+        subject: 'I want to know more about trusta',
+        text: message
+    }
+    
+    
+    await transporter.sendMail(mailOptions, function(err,data){
+        if(err){
+            console.log(err)
+        }else{
+            console.log('Mail sent')
+        }
+    })
+}
 
 app.get('/customers', (req,res) => {
     Customers.findAll()
@@ -44,6 +73,11 @@ app.delete('/testimony/:id', (req,res)=> {
     .catch(err => {
         res.send(err)
     })
+})
+
+app.post('/mail', (req,res) => {
+    const {email, message} = req.body
+    sendMail(email, message)
 })
 
 app.get('/email', (req,res) => {
