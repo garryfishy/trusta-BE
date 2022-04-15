@@ -3,7 +3,8 @@ const app = express()
 const port = process.env.PORT || 3000
 const cors = require('cors');
 const {Customers, Interested} = require('./models');
-const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer');
+const res = require('express/lib/response');
 
 
 require('dotenv').config()
@@ -37,7 +38,7 @@ async function sendMail(email, message){
         if(err){
             console.log(err)
         }else{
-            console.log('Mail sent')
+            res.status(200).json('Mail sent')
         }
     })
 }
