@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4000
 const cors = require('cors');
 const {Customers, Interested} = require('./models');
 const nodemailer = require('nodemailer');
@@ -27,15 +27,34 @@ async function sendMail(email, message){
     })
     
     let mailOptions = {
-        from: '<no-reply@trusta.com>',
+        from: `No Reply <${email}>`,
         to: 'sales@trusta.co.id',
-        subject: `${email} said: ${message}`,
-        text: message
+        subject: 'A new potential customer has sent you a message!',
+        html: `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+            <table>
+                <p>
+                    From : ${email}
+                </p>
+                <p>
+                    Message: ${message}
+                </p>
+            </table>
+        </body>
+        </html>`
     }
     await transporter.sendMail(mailOptions, function(err,data){
         if(err){
             console.log(err)
         }else{
+            console.log('Sent')
             res.status(200).json('Mail sent')
         }
     })
